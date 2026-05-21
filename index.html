@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#dff7ff">
-  <title>Email Dikonfirmasi — Noora</title>
+  <title>Noora — Cahaya untuk Anak Muslim</title>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box}
@@ -29,7 +29,6 @@
       position:relative;overflow:hidden;
       color:#21443b;
     }
-    /* Header light dengan logo — padding lebih rapat */
     .brand-block{
       padding:28px 24px 18px;
       background:linear-gradient(180deg,#fffdf3 0%,#ffffff 100%);
@@ -45,14 +44,10 @@
       box-shadow:0 8px 18px rgba(33,68,59,.10);
       animation:floaty 4s ease-in-out infinite;
     }
-    @keyframes floaty{
-      0%,100%{transform:translateY(0)}
-      50%{transform:translateY(-5px)}
-    }
+    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
     .brand-tag{
       font-size:11px;font-weight:800;color:#1a8a55;
-      letter-spacing:2.5px;text-transform:uppercase;
-      margin:0 0 2px;
+      letter-spacing:2.5px;text-transform:uppercase;margin:0 0 2px;
     }
     .brand-name{
       font-size:28px;font-weight:800;color:#21443b;
@@ -61,11 +56,13 @@
     .card-body{padding:22px 26px 20px;}
     .badge{
       display:inline-flex;align-items:center;gap:6px;
-      background:#eafff1;color:#1a8a55;
       padding:6px 14px;border-radius:999px;
       font-weight:800;font-size:12px;
       margin-bottom:10px;
     }
+    .badge.success{background:#eafff1;color:#1a8a55;}
+    .badge.danger{background:#ffe6ef;color:#c92f5c;}
+    .badge.info{background:#dff7ff;color:#2aa6f5;}
     h1{
       font-size:22px;margin:0 0 8px;
       font-weight:800;line-height:1.25;color:#21443b;
@@ -90,19 +87,19 @@
       display:flex;align-items:flex-start;gap:9px;line-height:1.4;
     }
     .checks p::before{
-      content:"✓";color:#1a8a55;font-weight:900;
-      flex-shrink:0;font-size:15px;
+      content:"✓";color:#1a8a55;font-weight:900;flex-shrink:0;font-size:15px;
     }
     .cta{
-      display:inline-block;
-      background:#36c979;color:#ffffff;
+      display:inline-block;width:100%;
+      background:#36c979;color:#ffffff;border:none;
       padding:13px 28px;border-radius:16px;
       font-weight:800;font-size:15px;letter-spacing:.3px;
-      text-decoration:none;
+      text-decoration:none;cursor:pointer;font-family:inherit;
       box-shadow:0 10px 22px rgba(33,68,59,.18);
       transition:transform .12s ease,background .2s ease;
     }
     .cta:active{transform:translateY(2px) scale(.98);background:#25b768}
+    .cta:disabled{opacity:.5;cursor:not-allowed;background:#36c979;}
     .footer-note{
       font-size:11.5px;color:#7a5a00;
       margin:12px 0 0;font-weight:700;line-height:1.4;
@@ -122,6 +119,51 @@
       font-weight:700;line-height:1.5;
       opacity:.8;
     }
+    /* Reset password form */
+    .reset-form{display:flex;flex-direction:column;gap:10px;margin:8px 0 16px;text-align:left;}
+    .reset-form label{
+      font-size:12px;font-weight:800;color:#2c4a40;
+      letter-spacing:.3px;text-transform:uppercase;
+    }
+    .input-wrap{
+      position:relative;
+      background:#f0f9f2;border:2px solid #d8f7e2;border-radius:14px;
+      padding:0 14px;display:flex;align-items:center;
+    }
+    .input-wrap:focus-within{border-color:#36c979;background:#fff;}
+    .input-wrap input{
+      flex:1;border:none;outline:none;background:transparent;
+      font-family:inherit;font-weight:700;font-size:15px;color:#21443b;
+      padding:14px 0;min-width:0;
+    }
+    .input-wrap .toggle{
+      background:none;border:none;font-size:18px;cursor:pointer;padding:6px;
+      color:#7a8a82;
+    }
+    .form-error{
+      background:#ffe6ef;color:#c92f5c;
+      padding:10px 14px;border-radius:12px;
+      font-weight:700;font-size:13px;
+      margin:0 0 12px;display:none;line-height:1.4;
+    }
+    .form-error.show{display:block;}
+    .form-success{
+      background:#eafff1;color:#1a8a55;
+      padding:10px 14px;border-radius:12px;
+      font-weight:700;font-size:13px;
+      margin:0 0 12px;display:none;line-height:1.4;
+    }
+    .form-success.show{display:block;}
+    /* Hidden by default — JS picks one view based on URL hash */
+    .view{display:none;}
+    .view.active{display:block;}
+    .spinner{
+      width:32px;height:32px;border-radius:50%;
+      border:4px solid #d8f7e2;border-top-color:#36c979;
+      animation:spin 1s linear infinite;
+      margin:20px auto;
+    }
+    @keyframes spin{to{transform:rotate(360deg);}}
   </style>
 </head>
 <body>
@@ -133,20 +175,67 @@
     </div>
 
     <div class="card-body">
-      <span class="badge">✨ Email Terverifikasi</span>
-      <h1>Alhamdulillah, email berhasil dikonfirmasi!</h1>
-      <p class="lead">Akun orang tua untuk si kecil sudah aktif. Sekarang silakan kembali ke aplikasi <strong>Noora</strong> dan login dengan email &amp; password Anda.</p>
-
-      <div class="checks">
-        <p>Buka aplikasi <strong>Noora</strong> di HP</p>
-        <p>Pilih menu <strong>"Masuk"</strong> di halaman login</p>
-        <p>Masukkan email &amp; password yang sudah didaftarkan</p>
-        <p>Progress anak akan tersimpan otomatis ke cloud ☁️</p>
+      <!-- Loading state (initial) -->
+      <div class="view active" id="viewLoading">
+        <div class="spinner"></div>
+        <p class="lead" style="margin-bottom:0;">Memuat...</p>
       </div>
 
-      <a href="#" onclick="window.close();return false;" class="cta">Tutup Halaman Ini</a>
+      <!-- Success: signup confirmed -->
+      <div class="view" id="viewSignup">
+        <span class="badge success">✨ Email Terverifikasi</span>
+        <h1>Alhamdulillah, email berhasil dikonfirmasi!</h1>
+        <p class="lead">Akun orang tua untuk si kecil sudah aktif. Sekarang silakan kembali ke aplikasi <strong>Noora</strong> dan login dengan email &amp; password Anda.</p>
+        <div class="checks">
+          <p>Buka aplikasi <strong>Noora</strong> di HP</p>
+          <p>Pilih menu <strong>"Masuk"</strong> di halaman login</p>
+          <p>Masukkan email &amp; password yang sudah didaftarkan</p>
+          <p>Progress anak akan tersimpan otomatis ke cloud ☁️</p>
+        </div>
+        <a href="#" onclick="window.close();return false;" class="cta" style="text-decoration:none;display:inline-block;">Tutup Halaman Ini</a>
+        <p class="footer-note">Halaman ini bisa ditutup. Lanjutkan ke aplikasi Noora di HP Anda.</p>
+      </div>
 
-      <p class="footer-note">Halaman ini bisa ditutup. Lanjutkan ke aplikasi Noora di HP Anda.</p>
+      <!-- Recovery: reset password form -->
+      <div class="view" id="viewRecovery">
+        <span class="badge info">🔑 Reset Password</span>
+        <h1>Buat Password Baru</h1>
+        <p class="lead">Masukkan password baru untuk akun <strong>Noora</strong> Anda. Pastikan minimal 6 karakter.</p>
+
+        <div class="form-error" id="formError"></div>
+        <div class="form-success" id="formSuccess"></div>
+
+        <form id="resetForm" class="reset-form">
+          <label for="newPwd">Password Baru</label>
+          <div class="input-wrap">
+            <input type="password" id="newPwd" placeholder="Minimal 6 karakter" autocomplete="new-password" required minlength="6">
+            <button type="button" class="toggle" data-toggle="newPwd" aria-label="Tampilkan password">👁</button>
+          </div>
+
+          <label for="confirmPwd">Konfirmasi Password</label>
+          <div class="input-wrap">
+            <input type="password" id="confirmPwd" placeholder="Ketik ulang password" autocomplete="new-password" required minlength="6">
+            <button type="button" class="toggle" data-toggle="confirmPwd" aria-label="Tampilkan password">👁</button>
+          </div>
+
+          <button type="submit" class="cta" id="btnSubmit" style="margin-top:8px;">🔑 Simpan Password Baru</button>
+        </form>
+
+        <p class="footer-note">Setelah berhasil, kembali ke aplikasi Noora dan login dengan password baru.</p>
+      </div>
+
+      <!-- Error: link expired / invalid -->
+      <div class="view" id="viewError">
+        <span class="badge danger">⏱️ Link Kadaluwarsa</span>
+        <h1 id="errorTitle">Link sudah tidak berlaku</h1>
+        <p class="lead" id="errorMsg">Link reset password / konfirmasi email ini sudah kadaluwarsa atau pernah dipakai. Silakan minta link baru dari aplikasi Noora.</p>
+        <div class="checks">
+          <p>Buka aplikasi <strong>Noora</strong> di HP</p>
+          <p>Untuk reset password: tap <strong>"Lupa password?"</strong> di halaman login</p>
+          <p>Untuk konfirmasi email: daftar ulang dengan email yang sama</p>
+        </div>
+        <a href="#" onclick="window.close();return false;" class="cta" style="text-decoration:none;display:inline-block;">Tutup Halaman Ini</a>
+      </div>
     </div>
 
     <div class="copyright-bar">
@@ -157,5 +246,134 @@
   <p class="outside-note">
     Bimbing si kecil rajin shalat, mengaji &amp; berakhlak indah ✨
   </p>
+
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    // Config (sama dengan js/config.js di aplikasi Noora)
+    const SUPABASE_URL = 'https://ahryboykdrgnrnyyxwvr.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_fGNiWmgs1MBPX9Qt1FNNRA_y3gVU7Zw';
+
+    // ===== Helper: switch view =====
+    function showView(id){
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      const v = document.getElementById(id);
+      if (v) v.classList.add('active');
+    }
+
+    // ===== Parse hash params dari URL Supabase =====
+    // Supabase redirect dengan params di hash, mis:
+    //   #access_token=xxx&refresh_token=xxx&type=recovery&...   (success)
+    //   #error=access_denied&error_code=otp_expired&...         (error)
+    function parseHashParams(){
+      const hash = window.location.hash.substring(1);
+      const params = {};
+      hash.split('&').forEach(pair => {
+        const [k, v] = pair.split('=');
+        if (k) params[decodeURIComponent(k)] = decodeURIComponent(v || '');
+      });
+      return params;
+    }
+
+    // ===== Toggle password visibility =====
+    document.querySelectorAll('.toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const inp = document.getElementById(btn.dataset.toggle);
+        if (!inp) return;
+        const visible = inp.type === 'text';
+        inp.type = visible ? 'password' : 'text';
+        btn.textContent = visible ? '👁' : '🙈';
+      });
+    });
+
+    // ===== Init: route ke view yang sesuai berdasarkan URL hash =====
+    (async function init(){
+      const params = parseHashParams();
+
+      // Kasus 1: ERROR di hash (expired, invalid, etc.)
+      if (params.error || params.error_code) {
+        const errEl = document.getElementById('errorMsg');
+        const titleEl = document.getElementById('errorTitle');
+        if (params.error_code === 'otp_expired') {
+          titleEl.textContent = 'Link sudah kadaluwarsa';
+          errEl.innerHTML = 'Link ini sudah kadaluwarsa atau pernah dipakai. Demi keamanan, link reset password / konfirmasi email hanya berlaku <strong>1 jam</strong>.';
+        } else if (params.error_code === 'access_denied') {
+          titleEl.textContent = 'Akses ditolak';
+          errEl.textContent = 'Link tidak valid atau sudah pernah dipakai. Silakan minta link baru dari aplikasi.';
+        } else {
+          titleEl.textContent = 'Terjadi kesalahan';
+          errEl.textContent = (params.error_description || 'Link bermasalah.') + ' Silakan minta link baru dari aplikasi Noora.';
+        }
+        showView('viewError');
+        return;
+      }
+
+      // Kasus 2: RECOVERY (reset password)
+      if (params.type === 'recovery' && params.access_token) {
+        // Inisialisasi Supabase client & set session dari token di URL
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        try {
+          const { error } = await sb.auth.setSession({
+            access_token: params.access_token,
+            refresh_token: params.refresh_token || ''
+          });
+          if (error) throw error;
+        } catch (e) {
+          // Token invalid → tampilkan error
+          document.getElementById('errorTitle').textContent = 'Token tidak valid';
+          document.getElementById('errorMsg').textContent = 'Link tidak bisa digunakan. Silakan minta link reset password baru dari aplikasi.';
+          showView('viewError');
+          return;
+        }
+
+        // Tampilkan form reset password
+        showView('viewRecovery');
+
+        // Bind submit handler
+        const form = document.getElementById('resetForm');
+        const btn = document.getElementById('btnSubmit');
+        const errBox = document.getElementById('formError');
+        const okBox = document.getElementById('formSuccess');
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          errBox.classList.remove('show');
+          okBox.classList.remove('show');
+          const p1 = document.getElementById('newPwd').value;
+          const p2 = document.getElementById('confirmPwd').value;
+          if (p1.length < 6) {
+            errBox.textContent = '⚠️ Password minimal 6 karakter.';
+            errBox.classList.add('show');
+            return;
+          }
+          if (p1 !== p2) {
+            errBox.textContent = '⚠️ Password dan konfirmasi tidak sama.';
+            errBox.classList.add('show');
+            return;
+          }
+          btn.disabled = true;
+          btn.textContent = 'Menyimpan...';
+          try {
+            const { error } = await sb.auth.updateUser({ password: p1 });
+            if (error) throw error;
+            okBox.innerHTML = '✅ Password berhasil diubah! Silakan buka aplikasi <strong>Noora</strong> dan login dengan password baru.';
+            okBox.classList.add('show');
+            form.style.display = 'none';
+            // Sign out supaya session di browser ini tidak terbawa
+            try { await sb.auth.signOut(); } catch {}
+          } catch (e2) {
+            errBox.textContent = '⚠️ Gagal: ' + (e2.message || String(e2));
+            errBox.classList.add('show');
+            btn.disabled = false;
+            btn.textContent = '🔑 Simpan Password Baru';
+          }
+        });
+        return;
+      }
+
+      // Kasus 3: SIGNUP confirmed (atau default)
+      // type=signup, atau tidak ada hash params sama sekali (visit langsung).
+      showView('viewSignup');
+    })();
+  </script>
 </body>
 </html>
