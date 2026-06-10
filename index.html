@@ -248,6 +248,54 @@
     const SUPABASE_URL = 'https://ahryboykdrgnrnyyxwvr.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_fGNiWmgs1MBPX9Qt1FNNRA_y3gVU7Zw';
 
+    // ===== Bahasa: dibaca dari ?lang=en (dikirim aplikasi sesuai pilihan user) =====
+    const LANG = (new URLSearchParams(location.search).get('lang') === 'en') ? 'en' : 'id';
+    const L = (id, en) => (LANG === 'en' ? en : id); // pilih teks dinamis
+
+    // Terjemahkan teks statis halaman ke English (Indonesia = default HTML).
+    (function applyEnglishIfNeeded(){
+      if (LANG !== 'en') return;
+      document.documentElement.lang = 'en';
+      const set = (sel, t) => { const el = document.querySelector(sel); if (el) el.textContent = t; };
+      const html = (sel, h) => { const el = document.querySelector(sel); if (el) el.innerHTML = h; };
+      const each = (sel, arr) => { const els = document.querySelectorAll(sel); arr.forEach((h, i) => { if (els[i]) els[i].innerHTML = h; }); };
+      set('#viewLoading .lead', 'Loading...');
+      // Signup confirmed
+      set('#viewSignup .badge', '✨ Email Verified');
+      set('#viewSignup h1', 'Alhamdulillah, your email is confirmed!');
+      html('#viewSignup .lead', 'Your Noora account is now active. Please return to the <strong>Noora</strong> app and sign in with your email &amp; password.');
+      each('#viewSignup .checks p', [
+        'Open the <strong>Noora</strong> app on your phone',
+        'Tap <strong>"Sign In"</strong> on the login page',
+        'Enter the email &amp; password you registered',
+        'Your daily worship progress is saved to the cloud ☁️'
+      ]);
+      set('#viewSignup .cta', 'Close This Page');
+      set('#viewSignup .footer-note', 'You can close this page. Continue in the Noora app on your phone.');
+      // Reset password
+      set('#viewRecovery .badge', '🔑 Reset Password');
+      set('#viewRecovery h1', 'Create a New Password');
+      html('#viewRecovery .lead', 'Enter a new password for your <strong>Noora</strong> account. At least 6 characters.');
+      const labels = document.querySelectorAll('#viewRecovery label');
+      if (labels[0]) labels[0].textContent = 'New Password';
+      if (labels[1]) labels[1].textContent = 'Confirm Password';
+      const np = document.getElementById('newPwd'); if (np) np.placeholder = 'At least 6 characters';
+      const cp = document.getElementById('confirmPwd'); if (cp) cp.placeholder = 'Re-type password';
+      set('#btnSubmit', '🔑 Save New Password');
+      set('#viewRecovery .footer-note', 'Once done, return to the Noora app and sign in with your new password.');
+      // Error
+      set('#viewError .badge', '⏱️ Link Expired');
+      set('#errorTitle', 'This link is no longer valid');
+      set('#errorMsg', 'This password reset / email confirmation link has expired or was already used. Please request a new one from the Noora app.');
+      each('#viewError .checks p', [
+        'Open the <strong>Noora</strong> app on your phone',
+        'To reset password: tap <strong>"Forgot password?"</strong> on the login page',
+        'To confirm email: register again with the same email'
+      ]);
+      set('#viewError .cta', 'Close This Page');
+      set('.outside-note', 'A companion for your daily worship — prayer, recitation &amp; beautiful character ✨');
+    })();
+
     // ===== Helper: switch view =====
     function showView(id){
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -289,14 +337,14 @@
         const errEl = document.getElementById('errorMsg');
         const titleEl = document.getElementById('errorTitle');
         if (params.error_code === 'otp_expired') {
-          titleEl.textContent = 'Link sudah kadaluwarsa';
-          errEl.innerHTML = 'Link ini sudah kadaluwarsa atau pernah dipakai. Demi keamanan, link reset password / konfirmasi email hanya berlaku <strong>1 jam</strong>.';
+          titleEl.textContent = L('Link sudah kadaluwarsa', 'This link has expired');
+          errEl.innerHTML = L('Link ini sudah kadaluwarsa atau pernah dipakai. Demi keamanan, link reset password / konfirmasi email hanya berlaku <strong>1 jam</strong>.', 'This link has expired or was already used. For security, reset password / email confirmation links are valid for only <strong>1 hour</strong>.');
         } else if (params.error_code === 'access_denied') {
-          titleEl.textContent = 'Akses ditolak';
-          errEl.textContent = 'Link tidak valid atau sudah pernah dipakai. Silakan minta link baru dari aplikasi.';
+          titleEl.textContent = L('Akses ditolak', 'Access denied');
+          errEl.textContent = L('Link tidak valid atau sudah pernah dipakai. Silakan minta link baru dari aplikasi.', 'The link is invalid or already used. Please request a new one from the app.');
         } else {
-          titleEl.textContent = 'Terjadi kesalahan';
-          errEl.textContent = (params.error_description || 'Link bermasalah.') + ' Silakan minta link baru dari aplikasi Noora.';
+          titleEl.textContent = L('Terjadi kesalahan', 'Something went wrong');
+          errEl.textContent = (params.error_description || L('Link bermasalah.', 'There was a problem with the link.')) + L(' Silakan minta link baru dari aplikasi Noora.', ' Please request a new link from the Noora app.');
         }
         showView('viewError');
         return;
@@ -314,8 +362,8 @@
           if (error) throw error;
         } catch (e) {
           // Token invalid → tampilkan error
-          document.getElementById('errorTitle').textContent = 'Token tidak valid';
-          document.getElementById('errorMsg').textContent = 'Link tidak bisa digunakan. Silakan minta link reset password baru dari aplikasi.';
+          document.getElementById('errorTitle').textContent = L('Token tidak valid', 'Invalid token');
+          document.getElementById('errorMsg').textContent = L('Link tidak bisa digunakan. Silakan minta link reset password baru dari aplikasi.', 'This link cannot be used. Please request a new password reset link from the app.');
           showView('viewError');
           return;
         }
@@ -335,30 +383,30 @@
           const p1 = document.getElementById('newPwd').value;
           const p2 = document.getElementById('confirmPwd').value;
           if (p1.length < 6) {
-            errBox.textContent = '⚠️ Password minimal 6 karakter.';
+            errBox.textContent = L('⚠️ Password minimal 6 karakter.', '⚠️ Password must be at least 6 characters.');
             errBox.classList.add('show');
             return;
           }
           if (p1 !== p2) {
-            errBox.textContent = '⚠️ Password dan konfirmasi tidak sama.';
+            errBox.textContent = L('⚠️ Password dan konfirmasi tidak sama.', '⚠️ Password and confirmation do not match.');
             errBox.classList.add('show');
             return;
           }
           btn.disabled = true;
-          btn.textContent = 'Menyimpan...';
+          btn.textContent = L('Menyimpan...', 'Saving...');
           try {
             const { error } = await sb.auth.updateUser({ password: p1 });
             if (error) throw error;
-            okBox.innerHTML = '✅ Password berhasil diubah! Silakan buka aplikasi <strong>Noora</strong> dan login dengan password baru.';
+            okBox.innerHTML = L('✅ Password berhasil diubah! Silakan buka aplikasi <strong>Noora</strong> dan login dengan password baru.', '✅ Password changed successfully! Open the <strong>Noora</strong> app and sign in with your new password.');
             okBox.classList.add('show');
             form.style.display = 'none';
             // Sign out supaya session di browser ini tidak terbawa
             try { await sb.auth.signOut(); } catch {}
           } catch (e2) {
-            errBox.textContent = '⚠️ Gagal: ' + (e2.message || String(e2));
+            errBox.textContent = L('⚠️ Gagal: ', '⚠️ Failed: ') + (e2.message || String(e2));
             errBox.classList.add('show');
             btn.disabled = false;
-            btn.textContent = '🔑 Simpan Password Baru';
+            btn.textContent = L('🔑 Simpan Password Baru', '🔑 Save New Password');
           }
         });
         return;
